@@ -1,0 +1,22 @@
+# Some Powershell aliases
+# paste in file opened by notepad $PROFILE
+
+function ali { notepad $PROFILE }
+function cds ([string]$project) { Set-Location E:/js/$project }
+function cpali { Copy-Item $PROFILE -Destination "E:/js/aliases/powershell"; echo "Aliases copied!" }
+function cra ([string]$name) { npx create-react-app $name --template typescript }
+function ffc {
+    Remove-Item -Path "$env:USERPROFILE\AppData\Local\Mozilla\Firefox\Profiles\*\cache2\*" -Force -Recurse
+    Write-Output "Cleared Firefox cache!"
+}
+function fire { ga; git commit -m 'FIRE!!!!'; git push }
+function ga { git add . }
+function gd { git diff --cached }
+function gf { git fetch --update-head-ok }
+# function gl { git log }
+# function gp { git push }
+function gpf { git push --force }
+function gpl { git pull --no-ff }
+function gr { git restore --staged .; git restore .; git clean -df * }
+function gs { git status }
+function gu { git reset --soft HEAD~1 }
