@@ -1,9 +1,9 @@
-# Some Powershell aliases
-# paste in file opened by notepad $PROFILE
+# Powershell aliases
 
 function ali { notepad $PROFILE }
 function cds ([string]$project) { Set-Location E:/js/$project }
-function cpali { Copy-Item $PROFILE -Destination "E:/js/aliases/powershell"; echo "Aliases copied!" }
+function cp ([string]$source, [string]$destination) { Copy-Item -Path $source -Destination $destination }
+function cpali { Copy-Item $PROFILE -Destination "E:/js/aliases/powershell"; Write-Output "Aliases copied!" }
 function cra ([string]$name) { npx create-react-app $name --template typescript }
 function ffc {
     Remove-Item -Path "$env:USERPROFILE\AppData\Local\Mozilla\Firefox\Profiles\*\cache2\*" -Force -Recurse
@@ -11,17 +11,30 @@ function ffc {
 }
 function fire { ga; git commit -m 'FIRE!!!!'; git push }
 function ga { git add . }
-function gd { git diff --cached }
+function gauto { git add .; git commit -m "autosave" }
+function gbd ([string]$name) { git branch -D $name }
+function gcd { git add .; git commit --no-edit }
+function gch ([string]$name) { git checkout $name }
+function gd { git diff HEAD }
 function gf { git fetch --update-head-ok }
 # function gl { git log }
-function gnb ([string]$branchName) { git checkout main; git fetch; git checkout -b $branchName; git status }
+function gle { rm ./.git/index.lock }
+function gn ([string]$repo_name) { git init; git add .; git commit -m "initial commit"; git branch -M main; git remote add origin "https://github.com/ifmcjthenknczny/$repo_name.git"; git push -u origin main }
+function gnb ([string]$name) { git checkout master; git fetch; git checkout -b $name; git status }
 # function gp { git push }
 function gpf { git push --force }
 function gpl { git pull --no-ff }
-function gr { git restore --staged .; git restore .; git clean -df * }
+function gr ([string]$directory = "") { if ([string]::IsNullOrEmpty($folder)) { git reset; git restore --staged .; git restore .; git clean -df . } else { git restore --staged $directory; git restore $directory; git clean -df $directory } }
+function grslc { git reset --soft HEAD~1 }
 function gs { git status }
-function gu { git reset --soft HEAD~1 }
-function nr { Remove-Item -Recurse -Force node_modules; npm i }
+function gsw ([string]$name) { git switch $name }
+function his ([string]$phrase) { Get-History | Where-Object { $_.CommandLine -match $phrase } }
+function myip {
+    $response = Invoke-RestMethod -Uri "https://ipinfo.io/ip"
+    return $response.Trim()
+}
 function nb { npm build }
+function ncc { npm cache clean --force }
+function nl { npx eslint --ext .ts . --fix }
 function ns { npm start }
 function nt { npm test }
