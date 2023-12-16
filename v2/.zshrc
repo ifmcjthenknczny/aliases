@@ -1,53 +1,30 @@
 work_directory="work"
 
 # This file
-alias ali="nano ~/.zshrc"
-alias cpali="(cd ~ && cp .zshrc zshrc_copy && echo aliases copied!)"
+alias ali="open -a TextEdit ~/.zshrc"
+alias cpali="(cd ~ && cp .zshrc zshrc_copy && echo Aliases copied!)"
 
 # Git
 alias ga="git add ."
-alias gb="git branch"
-alias gf="git fetch --update-head-ok"
-alias gs="git status"
-alias grfl="git reflog"
-alias gp="git push"
-alias gpl="git pull --no-ff"
-alias gl="git log"
-alias gcl="git clean -df *"
-alias grt="git restore ."
-alias gpf="git push --force"
-alias gsw="git switch"
-alias grslc="git reset --soft HEAD^" #grslc = git reset soft last commit
-alias grhlc="git reset --hard HEAD^" #grhlc = git reset hard last commit
-alias gd="git diff HEAD"
-alias gauto="ga && git commit -m 'autosave'"
 alias gas="gauto && git checkout"
+alias gauto="ga && git commit -m 'autosave'"
+alias gb="git branch"
 alias gca="git gc --aggressive"
 alias gcd="git commit --no-edit"
+alias gcl="git clean -df *"
 alias gcne="ga && gcd && gp"
-
-gm() {
-main_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
-git fetch origin $main_branch:$main_branch -u && git merge $main_branch --no-edit
-}
-
-main() {
-main_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
-gch $main_branch
-}
-
-gnb() {
-if [ -z "$1" ]
-then
-echo "Provide a new branch name"
-return 0
-fi
-main && gnbs $1 && gm && gs
-}
-
-gnbs() {
-git pull && git checkout -b $1 && git status
-}
+alias gd="git diff HEAD"
+alias gf="git fetch --update-head-ok"
+alias gl="git log"
+alias gp="git push"
+alias gpf="git push --force"
+alias gpl="git pull --no-ff"
+alias grfl="git reflog"
+alias grhlc="git reset --hard HEAD^" #grhlc = git reset hard last commit
+alias grslc="git reset --soft HEAD^" #grslc = git reset soft last commit
+alias grt="git restore ."
+alias gs="git status"
+alias gsw="git switch"
 
 gba() {
 if [ -z "$1" ]
@@ -58,33 +35,10 @@ cd ~/$work_directory/$1 && git branch -a
 fi
 }
 
-grs() {
-if [ -z "$1" ]
-then
-git reset --soft HEAD^
-else
-git reset --soft HEAD~$1
-fi
-}
-
-gr() {
-if [ -z "$1" ]
-then
-git restore --staged . && git restore . && git clean -df .
-else
-git restore --staged $1 && git restore $1 && git clean -df $1
-fi
-}
-
-gfm() {
-main_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
-git fetch origin $main_branch:$main_branch
-}
-
 gch() {
 if [ -z "$1" ]
 then
-echo "Provide a new branch name"
+echo "Provide a branch name"
 return 0
 fi
 git checkout $1 2>/dev/null
@@ -100,7 +54,56 @@ if [ $? -ne 0 ]; then
 fi
 }
 
+gfm() {
+main_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
+git fetch origin $main_branch:$main_branch
+}
+
+gm() {
+main_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
+git fetch origin $main_branch:$main_branch -u && git merge $main_branch --no-edit
+}
+
+gnb() {
+if [ -z "$1" ]
+then
+echo "Provide a new branch name"
+return 0
+fi
+main && gnbs $1 && gm && gs
+}
+
+gnbs() {
+git pull && git checkout -b $1 && git status
+}
+
+gr() {
+if [ -z "$1" ]
+then
+git restore --staged . && git restore . && git clean -df .
+else
+git restore --staged $1 && git restore $1 && git clean -df $1
+fi
+}
+
+grs() {
+if [ -z "$1" ]
+then
+git reset --soft HEAD^
+else
+git reset --soft HEAD~$1
+fi
+}
+
+main() {
+main_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
+gch $main_branch
+}
+
 # Yarn
+alias y="yarn"
+alias ya="yarn add"
+alias yad="yarn add --dev"
 alias yu="yarn upgrade --frozen-lockfile"
 
 yr() {
@@ -122,8 +125,8 @@ fi
 }
 
 # Filesystem
-alias l="ls -la"
 alias hm="cd ~"
+alias l="ls -la"
 alias rmd="sudo rm -rf"
 
 cds() {
@@ -142,13 +145,11 @@ history | grep $1
 
 # K8s
 alias k="kubectl"
-alias kx="kubectx"
 alias kds="kubectl describe pod"
 alias ke="kubectl edit pod"
 alias kp="kubectl get pod --label-columns mode --sort-by=.metadata.name"
+alias kx="kubectx"
 alias pod="kp"
-alias opd="pod"
-alias pdo="pod"
 
 kd() {
 for arg in "$@"; do
