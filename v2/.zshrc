@@ -17,7 +17,6 @@ alias gd="git diff HEAD"
 alias gf="git fetch --update-head-ok"
 alias gl="git log"
 alias gp="git push"
-alias gpf="git push --force"
 alias gpl="git pull --no-ff"
 alias grfl="git reflog"
 alias grhlc="git reset --hard HEAD^" #grhlc = git reset hard last commit
@@ -78,6 +77,11 @@ git pull && git checkout -b $1 && git status
 }
 
 gr() {
+read -p "Are you sure you want to restore and clean (y/N)?" response
+if [[ $response != y && $response != Y ]]; then
+  echo "Aborted by user request"
+  return
+fi
 if [ -z "$1" ]
 then
 git restore --staged . && git restore . && git clean -df .
