@@ -1,3 +1,4 @@
+export PATH="/opt/homebrew/bin:$PATH"
 work_directory="work"
 
 # This file
@@ -5,7 +6,7 @@ alias ali="open -a TextEdit ~/.zshrc"
 alias cpali="(cd ~ && cp .zshrc zshrc_copy && echo Aliases copied!)"
 
 # Git
-alias ga="git add ."
+alias ga="(cds && git add .)"
 alias gas="gauto && git checkout"
 alias gauto="ga && git commit -m 'autosave'"
 alias gb="git branch"
@@ -15,6 +16,7 @@ alias gcl="git clean -df *"
 alias gcne="ga && gcd && gp"
 alias gd="git diff HEAD"
 alias gf="git fetch --update-head-ok"
+alias gmain=echo $(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
 alias gl="git log"
 alias gp="git push"
 alias gpl="git pull --no-ff"
@@ -54,12 +56,12 @@ fi
 }
 
 gfm() {
-main_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
+main_branch=$(gmain)
 git fetch origin $main_branch:$main_branch
 }
 
 gm() {
-main_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
+main_branch=$(gmain)
 git fetch origin $main_branch:$main_branch -u && git merge $main_branch --no-edit
 }
 
@@ -77,7 +79,8 @@ git pull && git checkout -b $1 && git status
 }
 
 gr() {
-read -p "Are you sure you want to restore and clean (y/N)?" response
+echo "Are you sure you want to restore and clean (y/N)?"
+read response
 if [[ $response != y && $response != Y ]]; then
   echo "Aborted by user request"
   return
@@ -90,6 +93,7 @@ git restore --staged $1 && git restore $1 && git clean -df $1
 fi
 }
 
+
 grs() {
 if [ -z "$1" ]
 then
@@ -100,7 +104,7 @@ fi
 }
 
 main() {
-main_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
+main_branch=$(gmain)
 gch $main_branch
 }
 
@@ -108,6 +112,7 @@ gch $main_branch
 alias y="yarn"
 alias ya="yarn add"
 alias yad="yarn add --dev"
+alias yf="yarn run lint --fix"
 alias yu="yarn upgrade --frozen-lockfile"
 
 yr() {
@@ -136,7 +141,7 @@ alias rmd="sudo rm -rf"
 cds() {
 if [ -z "$1" ]
 then
-cd ~/$work_directory
+cd ~/$work_directory/$(pwd | tr '/' '\n' | grep -A 1 $work_directory | tail -n 1) || return
 else
 cd ~/$work_directory/$1 && gs
 fi
