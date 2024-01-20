@@ -2,7 +2,7 @@ export PATH="/opt/homebrew/bin:$PATH"
 work_directory="work"
 
 # This file
-alias ali="open -a TextEdit ~/.zshrc"
+alias ali="text ~/.zshrc"
 alias cpali="(cd ~ && cp .zshrc zshrc_copy && echo Aliases copied!)"
 
 # Git
@@ -79,7 +79,7 @@ git pull && git checkout -b $1 && git status
 }
 
 gr() {
-echo "Are you sure you want to restore and clean (y/N)?"
+echo "Are you sure you want to reset (y/N)?"
 read response
 if [[ $response != y && $response != Y ]]; then
   echo "Aborted by user request"
@@ -112,8 +112,10 @@ gch $main_branch
 alias y="yarn"
 alias ya="yarn add"
 alias yad="yarn add --dev"
+alias ybs="yarn run buildAndStart"
 alias yf="yarn run lint --fix"
 alias yu="yarn upgrade --frozen-lockfile"
+alias yz="yf && ybs"
 
 yr() {
 if [ -z "$1" ]
@@ -137,11 +139,18 @@ fi
 alias hm="cd ~"
 alias l="ls -la"
 alias rmd="sudo rm -rf"
+alias text="open -a TextEdit"
 
 cds() {
 if [ -z "$1" ]
 then
-cd ~/$work_directory/$(pwd | tr '/' '\n' | grep -A 1 $work_directory | tail -n 1) || return
+main_project_folder=$(pwd | tr '/' '\n' | grep -A 1 $work_directory | tail -n 1)
+if [ "$main_project_folder" = "$work_directory" ]
+then
+return
+else
+cd ~/$work_directory/$main_project_folder || return
+fi
 else
 cd ~/$work_directory/$1 && gs
 fi
@@ -173,3 +182,6 @@ k delete pod $1 --grace-period=0 --force
 kl() {
 kubectl logs -f -l app=$1
 }
+
+# compctl -D -f
+# compctl -/ -W ~/$work_directory cds
