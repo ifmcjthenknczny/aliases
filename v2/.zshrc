@@ -114,6 +114,7 @@ alias ya="yarn add"
 alias yad="yarn add --dev"
 alias ybs="yarn run buildAndStart"
 alias yf="yarn run lint --fix"
+alias yl="(cds && cd ./deployment && y && cd ../lambda-app && y)"
 alias yu="yarn upgrade --frozen-lockfile"
 alias yz="yf && ybs"
 
