@@ -79,14 +79,14 @@ git pull && git checkout -b $1 && git status
 }
 
 gr() {
+if [ -z "$1" ]
+then
 echo "Are you sure you want to reset (y/N)?"
 read response
 if [[ $response != y && $response != Y ]]; then
   echo "Aborted by user request"
   return
 fi
-if [ -z "$1" ]
-then
 git restore --staged . && git restore . && git clean -df .
 else
 git restore --staged $1 && git restore $1 && git clean -df $1
