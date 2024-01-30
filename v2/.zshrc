@@ -26,6 +26,7 @@ alias grslc="git reset --soft HEAD^" #grslc = git reset soft last commit
 alias grt="git restore ."
 alias gs="git status"
 alias gsw="git switch"
+alias gt="git branch --v"
 
 gba() {
 if [ -z "$1" ]
@@ -69,7 +70,7 @@ gnb() {
 if [ -z "$1" ]
 then
 echo "Provide a new branch name"
-return 0
+return
 fi
 main && gnbs $1 && gm && gs
 }
