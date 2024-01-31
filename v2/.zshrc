@@ -88,9 +88,9 @@ if [[ $response != y && $response != Y ]]; then
   echo "Aborted by user request"
   return
 fi
-git restore --staged . && git restore . && git clean -df .
+(cds && git restore --staged . && git restore . && git clean -df .)
 else
-git restore --staged $1 && git restore $1 && git clean -df $1
+(cds && git restore --staged $1 && git restore $1 && git clean -df $1)
 fi
 }
 
