@@ -66,11 +66,6 @@ git fetch origin $main_branch:$main_branch -u && git merge $main_branch --no-edi
 }
 
 gnb() {
-if [ -z "$1" ]
-then
-echo "Provide a new branch name"
-return 0
-fi
 main && gnbs $1 && gm && gs
 }
 
@@ -138,8 +133,14 @@ fi
 }
 
 # Filesystem
+alias c="clear"
+alias cp="cp -i"
+alias count='ls -1 | wc -l'
+alias h='history'
 alias hm="cd ~"
 alias l="ls -la"
+alias mv="mv -i"
+alias rm="rm -i"
 alias rmd="sudo rm -rf"
 alias text="open -a TextEdit"
 
