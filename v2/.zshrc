@@ -45,9 +45,13 @@ fi
 git checkout $1 2>/dev/null
 if [ $? -ne 0 ]; then
   echo "Branch '$1' does not exist."
-  matching_branches=$(gba | grep $1)
+  matching_branches=$(gb | grep $1)
+  count=$(echo "$matching_branches" | wc -l)
   if [ -z "$matching_branches" ]; then
     echo "And there are no matching branches. So sorry mate."
+  elif [ $count -eq 1 ]; then
+    echo "Only one matching branch found. Checking out to$matching_branches".
+    git checkout $(echo "$matching_branches" | awk '{print $1}')
   else
     echo "Here are some branches matching:"
     echo "$matching_branches"
