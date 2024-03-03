@@ -16,7 +16,7 @@ alias gcl="git clean -df *"
 alias gcne="ga && gcd && gp"
 alias gd="git diff HEAD"
 alias gf="git fetch --update-head-ok"
-alias gmain=echo $(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
+alias gmain="git for-each-ref --format='%(refname:short)' refs/heads/main refs/heads/master | head -n1"
 alias gl="git log"
 alias gp="git push"
 alias gpl="git pull --no-ff"
