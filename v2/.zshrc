@@ -16,7 +16,7 @@ alias gcl="git clean -df *"
 alias gcne="ga && gcd && gp"
 alias gd="git diff HEAD"
 alias gf="git fetch --update-head-ok"
-alias gmain="git for-each-ref --format='%(refname:short)' refs/heads/main refs/heads/master | head -n1"
+alias gmain=echo $(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
 alias gl="git log"
 alias gp="git push"
 alias gpl="git pull --no-ff"
@@ -86,12 +86,11 @@ if [[ $response != y && $response != Y ]]; then
   echo "Aborted by user request"
   return
 fi
-git restore --staged . && git restore . && git clean -df .
+(cds && git restore --staged . && git restore . && git clean -df .)
 else
 git restore --staged $1 && git restore $1 && git clean -df $1
 fi
 }
-
 
 grs() {
 if [ -z "$1" ]
