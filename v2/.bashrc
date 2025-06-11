@@ -1,7 +1,10 @@
 export PATH="/usr/local/bin:$PATH"
 work_directory="work"
 
+export NODE_ENV="development"
+
 alias project="cd \"$work_directory\""
+alias project_code="code \"$work_directory\""
 
 # This file
 alias ali="nano ~/.bashrc"
@@ -10,7 +13,6 @@ alias aliases="(grep -oP '^\s*alias\s+\K\w+' ~/.bashrc && grep -E '^\s*[a-zA-Z_]
 
 # Git
 alias ga="(cds && git add .)"
-alias gas="gauto && git checkout"
 alias gauto="ga && git commit -m 'autosave'"
 alias gb="git branch"
 alias gca="git gc --aggressive"
@@ -31,82 +33,80 @@ alias gs="git status"
 alias gsw="git switch"
 
 gba() {
-if [ -z "$1" ]
-then
-git branch -a
-else
-cd ~/$work_directory/$1 && git branch -a
-fi
+  if [ -z "$1" ]; then
+    git branch -a
+  else
+    cd ~/$work_directory/$1 && git branch -a
+  fi
 }
 
 gch() {
-if [ -z "$1" ]
-then
-echo "Provide a branch name"
-return 0
-fi
-git checkout $1 2>/dev/null
-if [ $? -ne 0 ]; then
-  echo "Branch '$1' does not exist."
-  matching_branches=$(gba | grep $1)
-  count=$(echo "$matching_branches" | wc -l)
-  if [ -z "$matching_branches" ]; then
-    echo "And there are no matching branches. So sorry mate."
-  elif [ $count -eq 1 ]; then
-    echo "Only one matching branch found. Checking out to$matching_branches".
-    git checkout $(echo "$matching_branches" | awk '{print $1}')
-  else
-    echo "Here are some branches matching:"
-    echo "$matching_branches"
+  if [ -z "$1" ]; then
+    echo "Provide a branch name"
+    return 0
   fi
-fi
+  git checkout $1 2>/dev/null && yarn install && git status
+  if [ $? -ne 0 ]; then
+    echo "Branch '$1' does not exist."
+    matching_branches=$(gba | grep $1)
+    count=$(echo "$matching_branches" | wc -l)
+    if [ -z "$matching_branches" ]; then
+      echo "And there are no matching branches. So sorry mate."
+    elif [ $count -eq 1 ]; then
+      echo "Only one matching branch found. Checking out to$matching_branches".
+      git checkout $(echo "$matching_branches" | awk '{print $1}') && yarn install && git status
+    else
+      echo "Here are some branches matching:"
+      echo "$matching_branches"
+    fi
+  fi
 }
 
 gfm() {
-main_branch=$(gmain)
-git fetch origin $main_branch:$main_branch
+  main_branch=$(gmain)
+  git fetch origin $main_branch:$main_branch
 }
 
 gm() {
-main_branch=$(gmain)
-git fetch origin $main_branch:$main_branch -u && git merge $main_branch --no-edit
+  main_branch=$(gmain)
+  git fetch origin $main_branch:$main_branch -u && git merge $main_branch --no-edit
 }
 
 gnb() {
-main && gnbs $1 && gm && gs
+  main && gnbs $1 && gm && yarn install && gs
 }
 
 gnbs() {
-git pull && git checkout -b $1 && git status
+  git pull && git checkout -b $1 && git status
 }
 
 gr() {
-if [ -z "$1" ]
-then
-echo "Are you sure you want to reset (y/N)?"
-read response
-if [[ $response != y && $response != Y ]]; then
-  echo "Aborted by user request"
-  return
-fi
-(cds && git restore --staged . && git restore . && git clean -df .)
-else
-git restore --staged $1 && git restore $1 && git clean -df $1
-fi
+  local target="$1"
+  if [ -z "$1" ]; then
+    echo "Are you sure you want to reset everything in the current directory (Y/N)?"
+    read response
+    if [[ $response != y && $response != Y ]]; then
+      echo "Aborted by user request"
+      return
+    fi
+      target="."
+      (cds && git restore --staged "$target" && git restore "$target" && git clean -df "$target")
+    else
+      git restore --staged "$target" && git restore "$target" && git clean -df "$target"
+  fi
 }
 
 grs() {
-if [ -z "$1" ]
-then
-git reset --soft HEAD^
-else
-git reset --soft HEAD~$1
-fi
+  if [ -z "$1" ]; then
+    git reset --soft HEAD^
+  else
+    git reset --soft HEAD~$1
+  fi
 }
 
 main() {
-main_branch=$(gmain)
-gch $main_branch
+  main_branch=$(gmain)
+  gch $main_branch
 }
 
 # Yarn
@@ -121,21 +121,19 @@ alias yu="yarn upgrade --frozen-lockfile"
 alias yz="yf && ybs"
 
 yr() {
-if [ -z "$1" ]
-then
-rm -rf node_modules && sudo rm yarn.lock && yarn
-else
-(cds $1 && rm -rf node_modules && sudo rm yarn.lock && yarn)
-fi
+  if [ -z "$1" ]l; then
+    rm -rf node_modules && sudo rm yarn.lock && yarn
+  else
+    (cds $1 && rm -rf node_modules && sudo rm yarn.lock && yarn)
+  fi
 }
 
 yrf() {
-if [ -z "$1" ]
-then
-rm -rf node_modules && sudo rm yarn.lock && sudo rm -rf dist && yarn
-else
-(cds $1 && rm -rf node_modules && sudo rm yarn.lock && sudo rm -rf dist && yarn)
-fi
+  if [ -z "$1" ]; then
+    rm -rf node_modules && sudo rm yarn.lock && sudo rm -rf dist && yarn
+  else
+    (cds $1 && rm -rf node_modules && sudo rm yarn.lock && sudo rm -rf dist && yarn)
+  fi
 }
 
 # Filesystem
@@ -151,23 +149,21 @@ alias rmd="sudo rm -rf"
 alias text="open -a TextEdit"
 
 cds() {
-if [ -z "$1" ]
-then
-main_project_folder=$(pwd | tr '/' '\n' | grep -A 1 $work_directory | tail -n 1)
-if [ "$main_project_folder" = "$work_directory" ]
-then
-return
-else
-cd ~/$work_directory/$main_project_folder || return
-fi
-else
-cd ~/$work_directory/$1 && gs
-fi
+  if [ -z "$1" ]; then
+    main_project_folder=$(pwd | tr '/' '\n' | grep -A 1 $work_directory | tail -n 1)
+      if [ "$main_project_folder" = "$work_directory" ]; then
+        return
+      else
+        cd ~/$work_directory/$main_project_folder || return
+      fi
+    else
+      cd ~/$work_directory/$1 && gs
+  fi
 }
 
 # Terminal
 his() {
-history | grep $1
+  history | grep $1
 }
 
 # K8s
@@ -179,17 +175,17 @@ alias kx="kubectx"
 alias pod="kp"
 
 kd() {
-for arg in "$@"; do
-  kubectl delete pod -l app="$arg"
-done
+  for arg in "$@"; do
+    kubectl delete pod -l app="$arg"
+  done
 }
 
 kdf() {
-k delete pod $1 --grace-period=0 --force
+  k delete pod $1 --grace-period=0 --force
 }
 
 kl() {
-kubectl logs -f -l app=$1
+  kubectl logs -f -l app=$1
 }
 
 # compctl -D -f
