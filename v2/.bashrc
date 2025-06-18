@@ -32,6 +32,9 @@ alias grt="git restore ."
 alias gs="git status"
 alias gsw="git switch"
 
+alias gkeep="git checkout --ours -- $(git diff --name-only --diff-filter=U)"
+alias gtake="git checkout --theirs -- $(git diff --name-only --diff-filter=U)"
+
 gba() {
   if [ -z "$1" ]; then
     git branch -a
@@ -54,7 +57,7 @@ gch() {
       echo "And there are no matching branches. So sorry mate."
     elif [ $count -eq 1 ]; then
       echo "Only one matching branch found. Checking out to$matching_branches".
-      git checkout $(echo "$matching_branches" | awk '{print $1}') && yarn install && git status
+      git checkout $(echo "$matching_branches" | awk '{print $1}') && git pull && yarn install && git status
     else
       echo "Here are some branches matching:"
       echo "$matching_branches"
@@ -137,7 +140,7 @@ yrf() {
 }
 
 # Filesystem
-alias cl="clear"
+alias c="clear"
 alias cp="cp -i"
 alias count='ls -1 | wc -l'
 alias h='history'
