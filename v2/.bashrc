@@ -30,10 +30,12 @@ alias grhlc="git reset --hard HEAD^" #grhlc = git reset hard last commit
 alias grslc="git reset --soft HEAD^" #grslc = git reset soft last commit
 alias grt="git restore ."
 alias gs="git status"
-alias gsw="git switch"
+alias gsw="git pull && git switch"
 
 alias gkeep="git checkout --ours -- $(git diff --name-only --diff-filter=U)"
 alias gtake="git checkout --theirs -- $(git diff --name-only --diff-filter=U)"
+
+alias gdm="git diff $(gmain)..."
 
 gba() {
   if [ -z "$1" ]; then
@@ -193,3 +195,35 @@ kl() {
 
 # compctl -D -f
 # compctl -/ -W ~/$work_directory cds
+
+# UV
+alias uvc="uv cache clean"
+
+# Helm
+helm_check() {
+  if [ -z "$1" ]; then
+    echo "Podaj ścieżkę do folderu z helm template"
+    return 1
+  fi
+  helm template my-rel $1 -f $1/values-dev.yaml --debug
+}
+
+# Random
+randstr() {
+  local len=${1:-16}
+  LC_ALL=C tr -dc "A-Za-z0-9" </dev/urandom | head -c "$len"
+  echo
+}
+
+uuidv4() {
+  local count=${1:-1}
+  for ((i=0; i<count; i++)); do
+    local b
+    b=($(od -An -N16 -tu1 /dev/urandom))
+    printf "%02x%02x%02x%02x-" "${b[0]}" "${b[1]}" "${b[2]}" "${b[3]}"
+    printf "%02x%02x-" "${b[4]}" "${b[5]}"
+    printf "%02x%02x-" "$(( (b[6] & 0x0f) | 0x40 ))" "${b[7]}"
+    printf "%02x%02x-" "$(( (b[8] & 0x3f) | 0x80 ))" "${b[9]}"
+    printf "%02x%02x%02x%02x%02x%02x\n" "${b[10]}" "${b[11]}" "${b[12]}" "${b[13]}" "${b[14]}" "${b[15]}"
+  done
+}
