@@ -36,6 +36,7 @@ alias gkeep="git checkout --ours -- $(git diff --name-only --diff-filter=U)"
 alias gtake="git checkout --theirs -- $(git diff --name-only --diff-filter=U)"
 
 alias gdm="git diff $(gmain)..."
+alias gcount='git diff HEAD --name-only | wc -l'
 
 gba() {
   if [ -z "$1" ]; then
@@ -197,7 +198,7 @@ kl() {
 # compctl -/ -W ~/$work_directory cds
 
 # UV
-alias uvc="uv cache clean"
+alias uvc="(rm -rf .venv && uv cache clean)"
 
 # Helm
 helm_check() {
@@ -226,4 +227,8 @@ uuidv4() {
     printf "%02x%02x-" "$(( (b[8] & 0x3f) | 0x80 ))" "${b[9]}"
     printf "%02x%02x%02x%02x%02x%02x\n" "${b[10]}" "${b[11]}" "${b[12]}" "${b[13]}" "${b[14]}" "${b[15]}"
   done
+}
+
+killport() {
+  sudo kill -9 $(lsof -t -i:$1)
 }
