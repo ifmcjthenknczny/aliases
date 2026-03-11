@@ -1,7 +1,6 @@
-export PATH="/usr/local/bin:$PATH"
 work_directory="work"
 
-export NODE_ENV="development"
+export NODE_ENV="local"
 
 alias project="cd \"$work_directory\""
 alias project_code="code \"$work_directory\""
@@ -128,7 +127,7 @@ alias yu="yarn upgrade --frozen-lockfile"
 alias yz="yf && ybs"
 
 yr() {
-  if [ -z "$1" ]l; then
+  if [ -z "$1" ]; then
     rm -rf node_modules && sudo rm yarn.lock && yarn
   else
     (cds $1 && rm -rf node_modules && sudo rm yarn.lock && yarn)
