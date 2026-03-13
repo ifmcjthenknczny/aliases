@@ -21,6 +21,7 @@ alias gcl="git clean -df *"
 alias gcne="ga && gcd && gp"
 alias gd="git diff HEAD"
 alias gf="git fetch --update-head-ok"
+alias gfl="gf && git log HEAD..origin/main"
 alias gmain='git remote show origin | awk "/HEAD branch/ {print \$NF}"'
 alias gl="git log"
 alias gp="git push"
