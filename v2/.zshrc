@@ -356,3 +356,5 @@ uuidv4() {
 killport() {
   sudo kill -9 $(lsof -t -i:$1)
 }
+
+alias clip="xclip -selection clipboard"
