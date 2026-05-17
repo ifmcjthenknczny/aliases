@@ -124,6 +124,7 @@ unalias gba gm main gr grs gch gd gcount 2>/dev/null
 work_directory='~/prog'
 
 export NODE_ENV='local'
+export EDITOR='nano'
 
 alias project='cd \"$work_directory\"'
 

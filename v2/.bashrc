@@ -1,6 +1,7 @@
 work_directory="work"
 
 export NODE_ENV="local"
+export EDITOR="nano"
 
 alias project="cd \"$work_directory\""
 alias project_code="code \"$work_directory\""
