@@ -21,6 +21,7 @@ alias gcd="git commit --no-edit"
 alias gcl="git clean -df *"
 alias gcne="ga && gcd && gp"
 alias gd="git diff HEAD"
+alias gdt='git diff HEAD -- ":!**/*.test.ts" ":!**/*.spec.ts"'
 alias gf="git fetch --update-head-ok"
 alias gfl="gf && git log HEAD..origin/main"
 alias gmain='git remote show origin | awk "/HEAD branch/ {print \$NF}"'
